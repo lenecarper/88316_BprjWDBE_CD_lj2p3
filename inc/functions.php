@@ -1,35 +1,39 @@
 <?php
     // Variables
     $_SESSION['question_amount'] = 0;
-    $_SESSION['first_question'] = "";
-    $_SESSION['second_question'] = "";
-    $_SESSION['third_question'] = "";
-    $_SESSION['fourth_question'] = "";
-    $_SESSION['fifth_question'] = "";
+    $questionAmount = $_SESSION['question_amount'];
+    $_SESSION['question_list'] = [];
+    $questions = $_SESSION['question_list'];
     $_SESSION['active_survey'] = false;
+    $activeSurvey = $_SESSION['active_survey'];
 
+    // Initialize function that's called when the page loads
     function init()
     {
+        // Check if the question amount input has been set
         if (isset($_POST['questions']))
         {
+            // Make sure the questions cannot go higher than 5
             if ($_POST['questions'] > 5)
             {
-                $_SESSION['question_amount'] = 5;
-                $_SESSION['active_survey'] = true;
+                $questionAmount = 5;
+                $activeSurvey = true;
             }
+            // Make sure the questions cannot be lower than 1
             else if ($_POST['questions'] > 0)
             {
-                $_SESSION['question_amount'] = $_POST['questions'];
-                $_SESSION['active_survey'] = true;
+                $questionAmount = $_POST['questions'];
+                $activeSurvey = true;
             }
             else
             {
-                $_SESSION['question_amount'] = 1;
-                $_SESSION['active_survey'] = true;
+                $questionAmount = 1;
+                $activeSurvey = true;
             }
         }
 
-        if ($_SESSION['active_survey'] == false)
+        // Display a different form if the number of questions has been set or not yet
+        if ($activeSurvey == false)
         {
             echo
             '<div id="form-container">
@@ -52,10 +56,42 @@
         }
         else
         {
-            echo '<div id="form-container" style="display: none"></div>';
-            echo '<h1>test</h1>';
+            // Pre-emptively display the title before the input fields
+            echo
+            '<div id="form-container">
+            <form method="POST" action="index.php">
+            <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>';
+            // Loop through the questions and display different input fields
+            for ($i = 0; $i < $questionAmount; $i++)
+            {
+                echo 
+                '<div class="field w-25">
+                <label class="glow text">Question' . ' ' . $i + 1 . '</label>
+                <input id="question_survey" name="question' . $i + 1 . '" class="settings-form" type="text" maxlength="25" required />
+                </div><br><br>';
+            }
+            // Display submit button outside the loop to make sure it doesn't get repeated
+            echo 
+            '<h2></h2>
+            <div class="flex row mt-1">
+            <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
+            </div></form></div>';
+        }
+
+        if (isset($_POST['submit_questions']))
+        {
+            $questions = $_POST['question1'];
+            echo
+            '<div id="form-container">
+            <form method="POST" action="index.php">
+            <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>
+            <h2></h2>
+            <div class="flex row mt-1">
+            <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
+            </div></form></div>';
         }
     }
 
     init();
+    // var_dump($_POST);
 ?>
