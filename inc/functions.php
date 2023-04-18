@@ -84,16 +84,15 @@
             echo
             '<div id="survey-container">
             <form method="POST" action="index.php">
-            <h2 class="play-once">TEST123 (REQUIRED)</h2>';
-            for ($q = 0; $q < 3; $q++)
+            <h2 class="play-once">QUESTION SURVEY</h2>';
+            for ($q = 0; $q < 4; $q++)
             {
-                $questions = $_POST['question'] . $q;
+                $questions = $_POST['question' . ($q + 1)];
                 echo 
                 '<div class="field w-25">
                 <label class="glow text">Question' . ' ' . $q + 1 . '</label>
-                <label class="glow text">' . $questions[$q] . '</label> .
-                <input id="question_survey" name="question' . $q + 1 . '" class="settings-form" type="text" maxlength="25" required />
-                </div><br><br><br>';
+                <label class="glow text">' . $questions . '</label> .
+                <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />                </div><br><br><br>';
             }
             echo
             '<h2></h2>
