@@ -18,6 +18,7 @@
             {
                 $questionAmount = 5;
                 $activeSurvey = true;
+                echo $activeSurvey;
             }
             // Make sure the questions cannot be lower than 1
             else if ($_POST['questions'] > 0)
@@ -33,13 +34,14 @@
         }
 
         // Display a different form if the number of questions has been set or not yet
+        $activeSurvey = $_SESSION['active_survey'];
         if ($activeSurvey == false)
         {
             echo
             '<div id="form-container">
             <form method="POST" action="index.php">
-                <div class="flex row w-100 ml-2" style="max-width: 800px;">
-                <div class="column w-65 p-1">
+                <div class="flex row w-100 ml-2" style="max-width: 800px;"></div>
+                <div class="column w-65 p-1"></div>
                 <h2 class="play-once">FORM SETTINGS (REQUIRED)</h2>
                 <div class="row w-100">
                 <div class="field w-30">
@@ -54,7 +56,7 @@
             </form>
             </div>';
         }
-        else
+        else if ($activeSurvey == 1)
         {
             // Pre-emptively display the title before the input fields
             echo
@@ -90,8 +92,13 @@
             <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
             </div></form></div>';
         }
+
+        if (isset($_POST['submit']))
+        {
+            $activeSurvey = true;
+        }
     }
 
-    init();
+    // init();
     // var_dump($_POST);
 ?>

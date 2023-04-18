@@ -9,6 +9,6 @@
     <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
-<?= $_SESSION['question_amount']; ?>
+    <?php init(); ?>
 </body>
 </html>
