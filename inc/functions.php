@@ -81,21 +81,26 @@
 
         if (isset($_POST['submit_questions']))
         {
-            $questions = $_POST['question1'];
             echo
             '<div id="survey-container">
             <form method="POST" action="index.php">
-            <h2 class="play-once">TEST123 (REQUIRED)</h2>
-            <h2></h2>
+            <h2 class="play-once">TEST123 (REQUIRED)</h2>';
+            for ($q = 0; $q < 3; $q++)
+            {
+                $questions = $_POST['question'] . $q;
+                echo 
+                '<div class="field w-25">
+                <label class="glow text">Question' . ' ' . $q + 1 . '</label>
+                <label class="glow text">' . $questions[$q] . '</label> .
+                <input id="question_survey" name="question' . $q + 1 . '" class="settings-form" type="text" maxlength="25" required />
+                </div><br><br><br>';
+            }
+            echo
+            '<h2></h2>
             <div class="flex row mt-1">
-            <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
+            <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save answer" >
             </div></form></div>';
         }
-
-        // if (isset($_POST['submit']))
-        // {
-        //     $activeSurvey = true;
-        // }
     }
 
     // init();
