@@ -6,6 +6,7 @@
     $questions = $_SESSION['question_list'];
     $_SESSION['active_survey'] = false;
     $activeSurvey = $_SESSION['active_survey'];
+    $_SESSION['active_questions'] = false;
 
     // Initialize function that's called when the page loads
     function init()
@@ -29,17 +30,19 @@
             {
                 $questionAmount = 1;
                 $activeSurvey = true;
+                echo 'test';
             }
         }
 
         // Display a different form if the number of questions has been set or not yet
+        $activeSurvey = $_SESSION['active_survey'];
         if ($activeSurvey == false)
         {
             echo
             '<div id="form-container">
             <form method="POST" action="index.php">
-                <div class="flex row w-100 ml-2" style="max-width: 800px;">
-                <div class="column w-65 p-1">
+                <div class="flex row w-100 ml-2" style="max-width: 800px;"></div>
+                <div class="column w-65 p-1"></div>
                 <h2 class="play-once">FORM SETTINGS (REQUIRED)</h2>
                 <div class="row w-100">
                 <div class="field w-30">
@@ -62,6 +65,7 @@
             <form method="POST" action="index.php">
             <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>';
             // Loop through the questions and display different input fields
+            $questionAmount = $_SESSION['question_amount'];
             for ($i = 0; $i < $questionAmount; $i++)
             {
                 echo 
@@ -75,23 +79,32 @@
             '<h2></h2>
             <div class="flex row mt-1">
             <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
-            </div></form></div>';
+            </div></form></div></div>';
         }
 
         if (isset($_POST['submit_questions']))
         {
-            $questions = $_POST['question1'];
+            $_SESSION['active_questions'] = true;
+            $questionAmount = $_SESSION['question_amount'];
+            for ($q = 0; $q < $questionAmount; $q++)
+            {
+                // $_SESSION['test'] = $_POST['question1'];
+            }
+        }
+    }
+
+    function activeQuestions()
+    {
             echo
-            '<div id="form-container">
+            '<div id="test-container">
             <form method="POST" action="index.php">
             <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>
             <h2></h2>
             <div class="flex row mt-1">
             <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
             </div></form></div>';
-        }
     }
 
-    init();
+    // init();
     // var_dump($_POST);
 ?>
