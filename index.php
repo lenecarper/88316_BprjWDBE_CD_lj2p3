@@ -1,3 +1,4 @@
+<?php require('inc/functions.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,6 @@
     <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
-    <h1>test</h1>
+<?= $_SESSION['question_amount']; ?>
 </body>
 </html>
