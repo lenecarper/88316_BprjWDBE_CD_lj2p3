@@ -3,7 +3,10 @@
     display: block;
 }
 
-
+#survey-container
+{
+    display: block;
+}
 
 /* Initial form styling (unformatted because of SCSS) */
 
