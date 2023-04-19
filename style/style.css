@@ -3,6 +3,11 @@
     display: block;
 }
 
+#question-container
+{
+    display: block;
+}
+
 #survey-container
 {
     display: block;

@@ -49,6 +49,7 @@
         }
 
         // Display a different form if the number of questions has been set or not yet
+        // $activeSurvey = false;
         if ($activeSurvey == false)
         {
             echo
@@ -74,8 +75,7 @@
         {
             // Pre-emptively display the title before the input fields
             echo
-            '<div id="form-container" style="display: none"></div>
-            <div id="test-container">
+            '<div id="question-container">
             <form method="POST" action="index.php">
             <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>';
             // Loop through the questions and display different input fields
@@ -116,29 +116,26 @@
                 </div></form></div>
                 <br><h2></h2>';
             }
+            uploadScore();
         }
+    }
 
-        function uploadScore()
-        {
-            // Check if there is a POST request
-            if($_SERVER['REQUEST_METHOD'] == "POST")
-            {            
-                # Define variables
-                $db = db();
-                $question = $_POST['question1'];
-                $answer = $_POST['question1'];
+    function uploadScore()
+    {
+        // Check if there is a POST request
+        if($_SERVER['REQUEST_METHOD'] == "POST")
+        {            
+            # Define variables
+            $db = db();
+            $question = $_POST['question1'];
+            $answer = $_POST['question1'];
 
-                # Gather all the data into an SQL query
-                if (isset($_POST['submit_answers']))
-                {
-                    $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
-                    # Query the data to be sent into the corresponding database tables
-                    $query = $db->query($upload) or die($db->error);
-                }
-                else
-                {
-                    echo 'An error has occured and your answer could not be uploaded.';
-                }
+            # Gather all the data into an SQL query
+            if (isset($_POST['submit_answers']))
+            {
+                $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
+                # Query the data to be sent into the corresponding database tables
+                $query = $db->query($upload) or die($db->error);
             }
         }
     }
