@@ -33,6 +33,11 @@
             }
         }
 
+        if (isset($_POST['reset']))
+        {
+            resetSurvey();
+        }
+
         function db()
         {   // Connect to the MySQL database
             $db = new mysqli('localhost', 'root', '', 'rocsurvey');
@@ -48,51 +53,13 @@
             return $db;
         }
 
-        // Display a different form if the number of questions has been set or not yet
-        // $activeSurvey = false;
         if ($activeSurvey == false)
         {
-            echo
-            '<div id="form-container">
-            <form method="POST" action="index.php">
-                <div class="flex row w-100 ml-2" style="max-width: 800px;"></div>
-                <div class="column w-65 p-1"></div>
-                <h2 class="play-once">FORM SETTINGS (REQUIRED)</h2>
-                <div class="row w-100">
-                <div class="field w-30">
-                    <label class="glow text">Number of questions (5 max)</label>
-                    <input id="questions" name="questions" class="settings-form" type="number" maxlength="1" required />
-                </div>
-                </div><br>
-                <h2></h2>
-                <div class="flex row mt-1">
-                    <input id="submit" name="submit" class="green" type="submit" value="Save" >
-                </div>
-            </form>
-            </div>';
+            settingsForm();
         }
-        else
+        else if ($activeSurvey == true)
         {
-            // Pre-emptively display the title before the input fields
-            echo
-            '<div id="question-container">
-            <form method="POST" action="index.php">
-            <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>';
-            // Loop through the questions and display different input fields
-            for ($i = 0; $i < $questionAmount; $i++)
-            {
-                echo 
-                '<div class="field w-25">
-                <label class="glow text">Question' . ' ' . $i + 1 . '</label>
-                <input id="question_survey" name="question' . $i + 1 . '" class="settings-form" type="text" maxlength="25" required />
-                </div><br><br>';
-            }
-            // Display submit button outside the loop to make sure it doesn't get repeated
-            echo 
-            '<h2></h2>
-            <div class="flex row mt-1">
-            <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
-            </div></form></div>';
+            surveyForm($questionAmount);
         }
 
         if (isset($_POST['submit_questions']))
@@ -113,31 +80,90 @@
                 </div><br>
                 <div class="flex row mt-1">
                 <input id="submit_answers" name="submit_answers" class="green" type="submit" value="Save answer" >
+                <input id="reset" name="reset" class="red" type="submit" value="Reset" />
                 </div></form></div>
                 <br><h2></h2>';
             }
-            uploadScore();
+        }
+
+        function uploadScore()
+        {
+            // Check if there is a POST request
+            if($_SERVER['REQUEST_METHOD'] == "POST")
+            {            
+                # Define variables
+                $db = db();
+                $question = $_POST['question1'];
+                $answer = $_POST['question1'];
+
+                # Gather all the data into an SQL query
+                if (isset($_POST['submit_answers']))
+                {
+                    $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
+                    # Query the data to be sent into the corresponding database tables
+                    $query = $db->query($upload) or die($db->error);
+                }
+                else
+                {
+                    echo 'An error has occured and your answer could not be uploaded.';
+                }
+            }
         }
     }
 
-    function uploadScore()
+    function resetSurvey()
     {
-        // Check if there is a POST request
-        if($_SERVER['REQUEST_METHOD'] == "POST")
-        {            
-            # Define variables
-            $db = db();
-            $question = $_POST['question1'];
-            $answer = $_POST['question1'];
+        session_destroy();
+        header("location:index.php");
+    }
 
-            # Gather all the data into an SQL query
-            if (isset($_POST['submit_answers']))
-            {
-                $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
-                # Query the data to be sent into the corresponding database tables
-                $query = $db->query($upload) or die($db->error);
-            }
+    function settingsForm()
+    {
+        // Display a different form if the number of questions has been set or not yet
+        echo
+        '<div id="form-container">
+        <form method="POST" action="index.php">
+            <div class="flex row w-100 ml-2" style="max-width: 800px;"></div>
+            <div class="column w-65 p-1"></div>
+            <h2 class="play-once">FORM SETTINGS (REQUIRED)</h2>
+            <div class="row w-100">
+            <div class="field w-30">
+                <label class="glow text">Number of questions (5 max)</label>
+                <input id="questions" name="questions" class="settings-form" type="number" maxlength="1" required />
+            </div>
+            </div><br>
+            <h2></h2>
+            <div class="flex row mt-1">
+                <input id="submit" name="submit" class="green" type="submit" value="Save" />
+                <input id="reset" name="reset" class="red" type="submit" value="Reset" />
+            </div>
+        </form>
+        </div>';
+    }
+
+    function surveyForm($questionAmount)
+    {
+        // Pre-emptively display the title before the input fields
+        echo
+        '<div id="question-container">
+        <form method="POST" action="index.php">
+        <h2 class="play-once">ENTER QUESTIONS (REQUIRED)</h2>';
+        // Loop through the questions and display different input fields
+        for ($i = 0; $i < $questionAmount; $i++)
+        {
+            echo 
+            '<div class="field w-25">
+            <label class="glow text">Question' . ' ' . $i + 1 . '</label>
+            <input id="question_survey" name="question' . $i + 1 . '" class="settings-form" type="text" maxlength="25" required />
+            </div><br><br>';
         }
+        // Display submit button outside the loop to make sure it doesn't get repeated
+        echo 
+        '<h2></h2>
+        <div class="flex row mt-1">
+        <input id="submit_questions" name="submit_questions" class="green" type="submit" value="Save questions" >
+        <input id="reset" name="reset" class="red" type="submit" value="Reset" />
+        </div></form></div>';
     }
 
     // init();
