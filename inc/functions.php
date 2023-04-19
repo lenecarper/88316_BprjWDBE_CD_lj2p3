@@ -35,14 +35,12 @@
 
         function db()
         {   // Connect to the MySQL database
-            $db = new mysqli('localhost', 'root', '', 'rocmemo');
+            $db = new mysqli('localhost', 'root', '', 'rocsurvey');
         
             // Checks the connection
             if($db -> connect_errno)
             {
                 echo "Connection failed " . $db -> connect_error;
-                array_push($errors, "The database has ran into a critical problem.");
-                echo $errors;
                 exit();
             }
 
@@ -99,14 +97,6 @@
 
         if (isset($_POST['submit_questions']))
         {
-            // if (isset($questionAmount))
-            // {
-            //     $questionAmount = $_SESSION['question_amount'];
-            // }
-            // else
-            // {
-            //     $questionAmount = $_POST['test'];
-            // }
             echo
             '<div id="survey-container">
             <form method="POST" action="index.php">
@@ -118,41 +108,36 @@
                 echo 
                 '<div class="field w-25">
                 <label class="glow text">Question' . ' ' . $q + 1 . '</label>
-                <label class="glow text">' . '<b style="font-size: 1.2em;">' . $questions . '</b>' . '</label> .
+                <label class="glow text">' . '<b style="font-size: 1.2em;">' . $questions . '</b>' . '</label>
                 <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
                 </div><br>
                 <div class="flex row mt-1">
-                <input id="submit_answers" name="submit_questions" class="green" type="submit" value="Save answer" >
+                <input id="submit_answers" name="submit_answers" class="green" type="submit" value="Save answer" >
                 </div></form></div>
                 <br><h2></h2>';
             }
         }
 
-        if (isset($_POST['submit_answers']))
+        function uploadScore()
         {
             // Check if there is a POST request
             if($_SERVER['REQUEST_METHOD'] == "POST")
             {            
                 # Define variables
                 $db = db();
-                $username = $_SESSION['username'];
-                $minimum = $_SESSION['minimum'];
-                $maximum = $_SESSION['maximum'];
-                $tries = $_SESSION['tries'];
-                $time = $_SESSION['time'];
+                $question = $_POST['question1'];
+                $answer = $_POST['question1'];
 
-                global $errors;
                 # Gather all the data into an SQL query
-                if (isset($_POST['guess']))
+                if (isset($_POST['submit_answers']))
                 {
-                    $upload = "INSERT into highscores (`username`, `minimum`, `maximum`, `tries`, `time`) VALUES ('$username', '$minimum', '$maximum', '$tries', '$time')";
+                    $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
                     # Query the data to be sent into the corresponding database tables
                     $query = $db->query($upload) or die($db->error);
-                    header("location:play.php");
-                } else
+                }
+                else
                 {
-                    array_push($errors, "An error has occured, please try again.");
-                    echo $errors;
+                    echo 'An error has occured and your answer could not be uploaded.';
                 }
             }
         }
