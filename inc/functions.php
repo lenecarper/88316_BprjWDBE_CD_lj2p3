@@ -53,39 +53,6 @@
             return $db;
         }
 
-        if ($activeSurvey == false)
-        {
-            settingsForm();
-        }
-        else if ($activeSurvey == true)
-        {
-            surveyForm($questionAmount);
-        }
-
-        if (isset($_POST['submit_questions']))
-        {
-            echo
-            '<div id="survey-container">
-            <form method="POST" action="index.php">
-            <h2 class="play-once">QUESTION SURVEY</h2>';
-            // Use $q < $questionAmount (currently deprecated and only for debugging)
-            for ($q = 0; $q < 5; $q++)
-            {
-                $questions = $_POST['question' . ($q + 1)];
-                echo 
-                '<div class="field w-25">
-                <label class="glow text">Question' . ' ' . $q + 1 . '</label>
-                <label class="glow text">' . '<b style="font-size: 1.2em;">' . $questions . '</b>' . '</label>
-                <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
-                </div><br>
-                <div class="flex row mt-1">
-                <input id="submit_answers" name="submit_answers" class="green" type="submit" value="Save answer" >
-                <input id="reset" name="reset" class="red" type="submit" value="Reset" />
-                </div></form></div>
-                <br><h2></h2>';
-            }
-        }
-
         function uploadScore()
         {
             // Check if there is a POST request
@@ -105,10 +72,28 @@
                 }
                 else
                 {
-                    echo 'An error has occured and your answer could not be uploaded.';
+                    // echo 'An error has occured and your answer could not be uploaded.';
                 }
             }
         }
+        checkState($activeSurvey, $questionAmount);
+    }
+
+    function checkState($activeSurvey, $questionAmount)
+    {
+        if ($activeSurvey == false)
+        {
+            settingsForm();
+        }
+        else if ($activeSurvey == true)
+        {
+            questionForm($questionAmount);
+        }
+    }
+
+    if (isset($_POST['submit_questions']))
+    {
+        surveyForm();
     }
 
     function resetSurvey()
@@ -141,7 +126,7 @@
         </div>';
     }
 
-    function surveyForm($questionAmount)
+    function questionForm($questionAmount)
     {
         // Pre-emptively display the title before the input fields
         echo
@@ -166,6 +151,27 @@
         </div></form></div>';
     }
 
-    // init();
-    // var_dump($_POST);
+    function surveyForm()
+    {
+        echo
+        '<div id="survey-container">
+        <form method="POST" action="index.php">
+        <h2 class="play-once">QUESTION SURVEY</h2>';
+        // Use $q < $questionAmount (currently deprecated and only for debugging)
+        for ($q = 0; $q < 5; $q++)
+        {
+            $questions = $_POST['question' . ($q + 1)];
+            echo 
+            '<div class="field w-25">
+            <label class="glow text">Question' . ' ' . $q + 1 . '</label>
+            <label class="glow text">' . '<b style="font-size: 1.2em;">' . $questions . '</b>' . '</label>
+            <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
+            </div><br>
+            <div class="flex row mt-1">
+            <input id="submit_answers" name="submit_answers" class="green" type="submit" value="Save answer" >
+            <input id="reset" name="reset" class="red" type="submit" value="Reset" />
+            </div></form></div>
+            <br><h2></h2>';
+        }
+    }
 ?>
