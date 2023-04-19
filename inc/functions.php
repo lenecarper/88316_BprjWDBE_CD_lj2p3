@@ -91,8 +91,9 @@
                 echo 
                 '<div class="field w-25">
                 <label class="glow text">Question' . ' ' . $q + 1 . '</label>
-                <label class="glow text">' . $questions . '</label> .
-                <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />                </div><br><br><br>';
+                <label class="glow text">' . '<b style="font-size: 1.2em;">' . $questions . '</b>' . '</label> .
+                <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
+                </div><br><br>';
             }
             echo
             '<h2></h2>
