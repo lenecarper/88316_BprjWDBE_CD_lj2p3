@@ -57,6 +57,7 @@
         {
             $_SESSION['question_amount'] = 3;
         }
+        $_SESSION['surveyCount'] = 0;
 
         checkState();
     }
@@ -83,8 +84,8 @@
         {
             # Define variables
             $db = db();
-            $question = "testQuestion";
-            $answer = "testAnswer";
+            $question = $_SESSION['formQuestions'];
+            $answer = $_SESSION['formAnswers'];
 
             # Gather all the data into an SQL query
             if (isset($_POST['submit_answers']))
@@ -188,8 +189,12 @@
             <label class="glow text">Question' . ' ' . $i + 1 . '</label>
             <input id="question_survey" name="question' . $i + 1 . '" class="settings-form" type="text" maxlength="25" required />
             </div><br><br>';
-            $question = $_POST['question' . ($i + 1)];
-            array_push($_SESSION['formQuestions'], $question);
+            if (isset($_POST['setQuestions']))
+            {
+                $question = $_POST['question' . ($i + 1)];
+                array_push($_SESSION['formQuestions'], $question);
+                var_dump($_SESSION['formQuestions']);
+            }
         }
         // Display submit button outside the loop to make sure it doesn't get repeated
         echo 
@@ -208,18 +213,27 @@
         <h2 class="play-once">QUESTION SURVEY</h2>';
         for ($q = 0; $q < $_SESSION['question_amount']; $q++)
         {
-            $_SESSION['formQuestions'] = $_POST['question' . ($q + 1)];
+            // for ($s = 0; $s < $_SESSION['surveyCount']; $s++)
+            // {
+
+            // }
             echo 
             '<div class="field w-25">
             <label class="glow text">Question' . ' ' . $q + 1 . '</label>
-            <label class="glow text">' . '<b style="font-size: 1.2em;">' . $_SESSION['formQuestions'] . '</b>' . '</label>
-            <input id="question_survey" name="question' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
+            <label class="glow text">' . '<b style="font-size: 1.2em;">' . $_SESSION['formQuestions'][$q] . '</b>' . '</label>
+            <input id="question_survey" name="answer' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
             </div><br>
             <div class="flex row mt-1">
             <input id="submit_answers" name="setAnswers" class="green" type="submit" value="Save answer" >
             <input id="reset" name="reset" class="red" type="submit" value="Reset" />
             </div></form></div>
             <br><h2></h2>';
+            if (isset($_POST['setAnswers']))
+            {
+                $answer = $_POST['answer' . ($q + 1)];
+                array_push($_SESSION['formAnswers'], $answer);
+            }
         }
+        var_dump($_SESSION['formAnswers']);
     }
 ?>
