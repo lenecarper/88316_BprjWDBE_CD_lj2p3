@@ -6,8 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Survey</title>
-    <?php if ($activeSurvey == false) { ?><link rel="stylesheet" href="style/style.css" /> <?php } 
-    else if ($activeSurvey == true) { ?> <link rel="stylesheet" href="style/main.css" /> <?php } ?>
+    <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
     <?php init(); uploadScore(); ?>
