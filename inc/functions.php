@@ -9,7 +9,10 @@
             if(isset($_POST['numQuestions']))
             {
                 $_SESSION['question_amount'] = $_POST['questions'];
-                $_SESSION['formStep'] + 1;
+            }
+            if($_SESSION['question_amount'] >= 0 || $_SESSION['question_amount'] < 5)
+            {
+                $_SESSION['question_amount'] = 5;
             }
             // form in step 1 is posted
             if(isset($_POST['setQuestions']))
@@ -31,6 +34,7 @@
             {
                 // clear all session data
                 session_destroy();
+                header("location:index.php");
             }
         }
         // reload the page
@@ -84,7 +88,7 @@
         {
             # Define variables
             $db = db();
-            $question = $_SESSION['formQuestions'];
+            $question = "testaaaaabbbbb";
             $answer = $_SESSION['formAnswers'];
 
             # Gather all the data into an SQL query
@@ -124,7 +128,7 @@
         elseif($_SESSION['formStep'] == 2)
         {
             surveyForm();
-            if (isset($_POST['numQuestions']) && $_POST['questions'] != "")
+            if (isset($_POST['setAnswers']))
             {
                 $_SESSION['formStep']++;
                 handlePost();
@@ -133,10 +137,12 @@
         elseif($_SESSION['formStep'] == 3)
         {
             saveForm();
-            if (isset($_POST['setAnswers']))
+            if (isset($_POST['saveData']))
             {
+                uploadScore();
                 $_SESSION['formStep'] = 0;
                 handlePost();
+                session_destroy();
             }
         }
     }
