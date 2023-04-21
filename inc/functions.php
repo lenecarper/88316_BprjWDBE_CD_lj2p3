@@ -1,5 +1,6 @@
 <?php
     session_start();
+    // session_destroy();
 
     function handlePost()
     {
@@ -9,10 +10,6 @@
             if(isset($_POST['numQuestions']))
             {
                 $_SESSION['question_amount'] = $_POST['questions'];
-            }
-            if($_SESSION['question_amount'] >= 0 || $_SESSION['question_amount'] < 5)
-            {
-                $_SESSION['question_amount'] = 5;
             }
             // form in step 1 is posted
             if(isset($_POST['setQuestions']))
@@ -34,7 +31,6 @@
             {
                 // clear all session data
                 session_destroy();
-                header("location:index.php");
             }
         }
         // reload the page
@@ -64,6 +60,7 @@
         $_SESSION['surveyCount'] = 0;
 
         checkState();
+        getScore();
     }
 
     function db()
@@ -88,11 +85,10 @@
         {
             # Define variables
             $db = db();
-            $question = "testaaaaabbbbb";
+            $question = $_SESSION['formQuestions'];
             $answer = $_SESSION['formAnswers'];
-
             # Gather all the data into an SQL query
-            if (isset($_POST['submit_answers']))
+            if (isset($_POST['saveData']))
             {
                 $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
                 # Query the data to be sent into the corresponding database tables
@@ -102,6 +98,33 @@
             {
                 // echo 'An error has occured and your answer could not be uploaded.';
             }
+        }
+    }
+
+    function getScore()
+    {   // Connect to the SQL database
+        $db = db();
+
+        $data = 'SELECT * from survey LIMIT 3';
+        $result = $db->query($data) or die($db->error);
+        // Insert all stored data into the database
+        $score = $result->fetch_all(MYSQLI_ASSOC);
+        // Check if there are any objects in the database
+        if (count($score) > 0)
+        { // Loop through all the highscores and print them out into the leaderboard
+        foreach($score as $point) 
+        {
+            echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th><th>Answer Date</th></tr>";
+            echo "<tr>";          
+            echo "<td>" . $point['question'] . "</td>";
+            echo "<td>" . $point['answer'] . "</td>";
+            echo "<td>" . $point['answerDate'] . "</td>";
+            echo "</tr>";
+            echo "</table>";
+        }
+        } else
+        { // If there are no highscores to display in the leaderboard
+            echo "No highscores yet! Be the first one by playing a match.";
         }
     }
 
@@ -142,7 +165,7 @@
                 uploadScore();
                 $_SESSION['formStep'] = 0;
                 handlePost();
-                session_destroy();
+                // session_destroy();
             }
         }
     }
@@ -167,7 +190,7 @@
             <h2 class="play-once">FORM SETTINGS (REQUIRED)</h2>
             <div class="row w-100">
             <div class="field w-30">
-                <label class="glow text">Number of questions (5 max)</label>
+                <label class="glow text">Number of questions</label>
                 <input id="questions" name="questions" class="settings-form" type="number" maxlength="1" required />
             </div>
             </div><br>

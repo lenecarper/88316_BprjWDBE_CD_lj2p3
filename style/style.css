@@ -13,6 +13,13 @@
     display: block;
 }
 
+.leaderboard
+{
+    font-size: 1.2em;
+    padding: 2px;
+    text-align: center;
+}
+
 /* Initial form styling (unformatted because of SCSS) */
 
 html, body {
