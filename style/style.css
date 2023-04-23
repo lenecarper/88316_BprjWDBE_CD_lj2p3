@@ -20,6 +20,11 @@
     text-align: center;
 }
 
+.form-td
+{
+    width: 250px !important;
+}
+
 /* Initial form styling (unformatted because of SCSS) */
 
 html, body {

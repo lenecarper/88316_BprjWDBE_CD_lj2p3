@@ -1,39 +1,38 @@
 <?php
     session_start();
-    // session_destroy();
 
     function handlePost()
     {
         if($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            // form in step 1 is posted
+            // Check if the next form should be loaded
             if(isset($_POST['numQuestions']))
             {
                 $_SESSION['question_amount'] = $_POST['questions'];
             }
-            // form in step 1 is posted
+            // Check if the next form should be loaded
             if(isset($_POST['setQuestions']))
             {
                 $_SESSION['questions'] = $_POST['questions'];
             }
-            // form in step 1 is posted
+            // Check if the next form should be loaded
             if(isset($_POST['setAnswers']))
             {
             }
-            // form in step 1 is posted
+            // Check if the next form should be loaded
             if(isset($_POST['saveData']))
             {
-                // save all session data to db
+                // Save all session data to SQL database
                 uploadScore();
             }
-            // reset is posted
+            // Check if the reset button was clicked
             if(isset($_POST['reset']))
             {
-                // clear all session data
+                // Destroy the session and clear all data
                 session_destroy();
             }
         }
-        // reload the page
+        // Reload the page
         header("location:index.php");
     }
 
@@ -148,10 +147,10 @@
         $data = $_SESSION['question_amount'];
         for ($a = 0; $a < $data; $a++)
         {
-            echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th></tr>";
+            echo "<br><table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th></tr>";
             echo "<tr>";          
-            echo "<td>" . $_SESSION['formQuestions'][$a] . "</td>";
-            echo "<td>" . $_SESSION['formAnswers'][$a] . "</td>";
+            echo "<td class='form-td'>" . $_SESSION['formQuestions'][$a] . "</td>";
+            echo "<td class='form-td'>" . $_SESSION['formAnswers'][$a] . "</td>";
             echo "</tr>";
             echo "</table>";
         }
@@ -217,7 +216,7 @@
             <h2></h2>
             <div class="flex row mt-1">
                 <input id="submit" name="numQuestions" class="green" type="submit" value="Save" />
-                <input id="reset" name="reset" class="red" type="button" value="Reset" />
+                <input id="reset" name="reset" class="red" type="submit" value="Reset" />
             </div>
         </form>
         </div>';
@@ -250,7 +249,7 @@
         '<h2></h2>
         <div class="flex row mt-1">
         <input id="submit_questions" name="setQuestions" class="green" type="submit" value="Save questions" >
-        <input id="reset" name="reset" class="red" type="button" value="Reset" />
+        <input id="reset" name="reset" class="red" type="submit" value="Reset" />
         </div></form></div>';
     }
 
@@ -284,7 +283,7 @@
         }
         echo
         '<input id="submit_answers" name="setAnswers" class="green" type="submit" value="Save answer" >
-        <input id="reset" name="reset" class="red" type="button" value="Reset" /></form>';
+        <input id="reset" name="reset" class="red" type="submit" value="Reset" /></form>';
         var_dump($_SESSION['formAnswers']);
     }
 
