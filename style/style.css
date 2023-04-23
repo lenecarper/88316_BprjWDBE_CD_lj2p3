@@ -1620,6 +1620,15 @@ button:active {
     color: #ddd;
     transform: scale(0.95);
 }
+
+#deleteData:hover
+{
+    animation: 0.8s ease-out infinite alternate glowingRed;
+    background: #c5003d;
+    transform: scale(1) rotateZ(var(--skew));
+    transition: transform 0.05s ease, opacity 0.15s ease;
+    opacity: 1; 
+}
 @keyframes glowing {
     0% {
         box-shadow: 0 0 2px 1px var(--color);
@@ -1659,6 +1668,48 @@ button:active {
    }
     100% {
         box-shadow: 0 0 8px 0 var(--color);
+   }
+}
+
+@keyframes glowingRed {
+    0% {
+        box-shadow: 0 0 2px 1px #c5003d;
+        opacity: 1;
+   }
+    13% {
+        box-shadow: 0 0 8px 1px #c5003d;
+        opacity: 0.9;
+   }
+    20% {
+        box-shadow: 0 0 2px 1px #c5003d;
+        opacity: 1;
+   }
+    27% {
+        box-shadow: 0 0 8px 1px #c5003d;
+        opacity: 0.9;
+   }
+    34% {
+        box-shadow: 0 0 5px 1px #c5003d;
+        opacity: 1;
+   }
+    40% {
+        box-shadow: 0 0 8px 1px #c5003d;
+        opacity: 0.9;
+   }
+    48% {
+        box-shadow: 0 0 3px 1px #c5003d;
+        opacity: 1;
+   }
+    55% {
+        box-shadow: 0 0 9px 1px #c5003d;
+        opacity: 0.9;
+   }
+    62% {
+        box-shadow: 0 0 5px 0 #c5003d;
+        opacity: 1;
+   }
+    100% {
+        box-shadow: 0 0 8px 0 #c5003d;
    }
 }
 @keyframes flicker {

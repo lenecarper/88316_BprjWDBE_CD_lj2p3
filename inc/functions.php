@@ -25,6 +25,12 @@
                 // Save all session data to SQL database
                 uploadScore();
             }
+            if(isset($_POST['deleteData']))
+            {
+                // Clear all session data and truncate SQL database
+                uploadScore();
+                session_destroy();
+            }
             // Check if the reset button was clicked
             if(isset($_POST['reset']))
             {
@@ -92,10 +98,12 @@
             $answer = [];
 
             $data = $_SESSION['question_amount'];
+            // If the user has requested to POST all their data into the database
             if (isset($_POST['saveData']))
             {
+                // Loop until there are no more questions left
                 for ($temp = 0; $temp < $data; $temp++)
-                {         
+                {   // Push the Questions and Answers into an array to insert into the database
                     array_push($question, $_SESSION['formQuestions'][$temp]);
                     array_push($answer, $_SESSION['formAnswers'][$temp]);
 
@@ -105,9 +113,13 @@
                     $query = $db->query($upload) or die($db->error);
                 }
             }
-            else
+            // If the user has requested to delete all database data
+            else if (isset($_POST['deleteData']))
             {
-                // echo 'An error has occured and your answer could not be uploaded.';
+                $upload = "TRUNCATE TABLE `survey`";
+                $query = $db->query($upload) or die($db->error);
+                session_destroy();
+                header("location:index.php");
             }
         }
     }
@@ -292,6 +304,7 @@
         ?>
         <form action="index.php" method="POST">
             <button name="saveData">Save To Database</button>
+            <button name="deleteData" id="deleteData">Delete Data</button>            
         </form>
         <?php
         getScore();
