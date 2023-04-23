@@ -57,10 +57,13 @@
         {
             $_SESSION['question_amount'] = 3;
         }
+        if($_SESSION['question_amount'] > 5)
+        {
+            $_SESSION['question_amount'] = 5;
+        }
         $_SESSION['surveyCount'] = 0;
 
         checkState();
-        getScore();
     }
 
     function db()
@@ -85,14 +88,23 @@
         {
             # Define variables
             $db = db();
-            $question = $_SESSION['formQuestions'];
-            $answer = $_SESSION['formAnswers'];
-            # Gather all the data into an SQL query
+
+            $question = [];
+            $answer = [];
+
+            $data = $_SESSION['question_amount'];
             if (isset($_POST['saveData']))
             {
-                $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question', '$answer', NOW())";
-                # Query the data to be sent into the corresponding database tables
-                $query = $db->query($upload) or die($db->error);
+                for ($temp = 0; $temp < $data; $temp++)
+                {         
+                    array_push($question, $_SESSION['formQuestions'][$temp]);
+                    array_push($answer, $_SESSION['formAnswers'][$temp]);
+
+                    # Gather all the data into an SQL query
+                    $upload = "INSERT into survey (`question`, `answer`, answerDate) VALUES ('$question[$temp]', '$answer[$temp]', NOW())";
+                    # Query the data to be sent into the corresponding database tables
+                    $query = $db->query($upload) or die($db->error);
+                }
             }
             else
             {
@@ -101,30 +113,47 @@
         }
     }
 
-    function getScore()
-    {   // Connect to the SQL database
-        $db = db();
+    // Currently deprecated function to get Questions and Answers from the database
+    // Using $_SESSION variables instead to display the user's personal content
 
-        $data = 'SELECT * from survey LIMIT 3';
-        $result = $db->query($data) or die($db->error);
-        // Insert all stored data into the database
-        $score = $result->fetch_all(MYSQLI_ASSOC);
-        // Check if there are any objects in the database
-        if (count($score) > 0)
-        { // Loop through all the highscores and print them out into the leaderboard
-        foreach($score as $point) 
+    // function getScore()
+    // {   // Connect to the SQL database
+    //     $db = db();
+
+    //     $data = 'SELECT * from survey LIMIT 3';
+    //     $result = $db->query($data) or die($db->error);
+    //     // Insert all stored data into the database
+    //     $score = $result->fetch_all(MYSQLI_ASSOC);
+    //     // Check if there are any objects in the database
+    //     if (count($score) > 0)
+    //     { // Loop through all the highscores and print them out into the leaderboard
+    //     foreach($score as $point) 
+    //     {
+    //         echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th><th>Answer Date</th></tr>";
+    //         echo "<tr>";          
+    //         echo "<td>" . $point['question'] . "</td>";
+    //         echo "<td>" . $point['answer'] . "</td>";
+    //         echo "<td>" . $point['answerDate'] . "</td>";
+    //         echo "</tr>";
+    //         echo "</table>";
+    //     }
+    //     } else
+    //     { // If there are no highscores to display in the leaderboard
+    //         echo "No highscores yet! Be the first one by playing a match.";
+    //     }
+    // }
+
+    function getScore()
+    {
+        $data = $_SESSION['question_amount'];
+        for ($a = 0; $a < $data; $a++)
         {
-            echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th><th>Answer Date</th></tr>";
+            echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th></tr>";
             echo "<tr>";          
-            echo "<td>" . $point['question'] . "</td>";
-            echo "<td>" . $point['answer'] . "</td>";
-            echo "<td>" . $point['answerDate'] . "</td>";
+            echo "<td>" . $_SESSION['formQuestions'][$a] . "</td>";
+            echo "<td>" . $_SESSION['formAnswers'][$a] . "</td>";
             echo "</tr>";
             echo "</table>";
-        }
-        } else
-        { // If there are no highscores to display in the leaderboard
-            echo "No highscores yet! Be the first one by playing a match.";
         }
     }
 
@@ -165,18 +194,9 @@
                 uploadScore();
                 $_SESSION['formStep'] = 0;
                 handlePost();
-                // session_destroy();
+                session_destroy();
             }
         }
-    }
-
-    function saveForm()
-    {
-        ?>
-        <form action="index.php" method="POST">
-            <button name="saveData">Save To Database</button>
-        </form>
-        <?php
     }
 
     function settingsForm()
@@ -197,7 +217,7 @@
             <h2></h2>
             <div class="flex row mt-1">
                 <input id="submit" name="numQuestions" class="green" type="submit" value="Save" />
-                <input id="reset" name="reset" class="red" type="submit" value="Reset" />
+                <input id="reset" name="reset" class="red" type="button" value="Reset" />
             </div>
         </form>
         </div>';
@@ -230,7 +250,7 @@
         '<h2></h2>
         <div class="flex row mt-1">
         <input id="submit_questions" name="setQuestions" class="green" type="submit" value="Save questions" >
-        <input id="reset" name="reset" class="red" type="submit" value="Reset" />
+        <input id="reset" name="reset" class="red" type="button" value="Reset" />
         </div></form></div>';
     }
 
@@ -253,9 +273,8 @@
             <input id="question_survey" name="answer' . ($q + 1) . '" class="settings-form" type="text" maxlength="25" required />
             </div><br>
             <div class="flex row mt-1">
-            <input id="submit_answers" name="setAnswers" class="green" type="submit" value="Save answer" >
-            <input id="reset" name="reset" class="red" type="submit" value="Reset" />
-            </div></form></div>
+
+            </div></div>
             <br><h2></h2>';
             if (isset($_POST['setAnswers']))
             {
@@ -263,6 +282,19 @@
                 array_push($_SESSION['formAnswers'], $answer);
             }
         }
+        echo
+        '<input id="submit_answers" name="setAnswers" class="green" type="submit" value="Save answer" >
+        <input id="reset" name="reset" class="red" type="button" value="Reset" /></form>';
         var_dump($_SESSION['formAnswers']);
+    }
+
+    function saveForm()
+    {
+        ?>
+        <form action="index.php" method="POST">
+            <button name="saveData">Save To Database</button>
+        </form>
+        <?php
+        getScore();
     }
 ?>
