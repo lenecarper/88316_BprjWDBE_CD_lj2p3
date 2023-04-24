@@ -170,6 +170,8 @@
 
     function checkState()
     {
+        // Check the form state, display a different form if certain requirements are met
+        // Increment the formStep to display different forms, handle POST requests afterwards
         if ($_SESSION['formStep'] == 0)
         {
             settingsForm();
@@ -273,10 +275,6 @@
         <h2 class="play-once">QUESTION SURVEY</h2>';
         for ($q = 0; $q < $_SESSION['question_amount']; $q++)
         {
-            // for ($s = 0; $s < $_SESSION['surveyCount']; $s++)
-            // {
-
-            // }
             echo 
             '<div class="field w-25">
             <label class="glow text">Question' . ' ' . $q + 1 . '</label>
@@ -299,6 +297,7 @@
         var_dump($_SESSION['formAnswers']);
     }
 
+    // Form to save the data in
     function saveForm()
     {
         ?>
