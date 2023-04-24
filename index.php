@@ -9,6 +9,6 @@
     <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
-    <?php init(); uploadScore(); ?>
+    <?php init(); uploadScore(); fetchScore(); ?>
 </body>
 </html>

@@ -127,32 +127,32 @@
     // Currently deprecated function to get Questions and Answers from the database
     // Using $_SESSION variables instead to display the user's personal content
 
-    // function getScore()
-    // {   // Connect to the SQL database
-    //     $db = db();
+    function fetchScore()
+    {   // Connect to the SQL database
+        $db = db();
 
-    //     $data = 'SELECT * from survey LIMIT 3';
-    //     $result = $db->query($data) or die($db->error);
-    //     // Insert all stored data into the database
-    //     $score = $result->fetch_all(MYSQLI_ASSOC);
-    //     // Check if there are any objects in the database
-    //     if (count($score) > 0)
-    //     { // Loop through all the highscores and print them out into the leaderboard
-    //     foreach($score as $point) 
-    //     {
-    //         echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th><th>Answer Date</th></tr>";
-    //         echo "<tr>";          
-    //         echo "<td>" . $point['question'] . "</td>";
-    //         echo "<td>" . $point['answer'] . "</td>";
-    //         echo "<td>" . $point['answerDate'] . "</td>";
-    //         echo "</tr>";
-    //         echo "</table>";
-    //     }
-    //     } else
-    //     { // If there are no highscores to display in the leaderboard
-    //         echo "No highscores yet! Be the first one by playing a match.";
-    //     }
-    // }
+        $data = 'SELECT * from survey LIMIT 3';
+        $result = $db->query($data) or die($db->error);
+        // Insert all stored data into the database
+        $score = $result->fetch_all(MYSQLI_ASSOC);
+        // Check if there are any objects in the database
+        if (count($score) > 0)
+        { // Loop through all the highscores and print them out into the leaderboard
+        foreach($score as $point) 
+        {
+            echo "<table border='1' class='leaderboard'><tr><th>Question</th><th>Answer</th><th>Answer Date</th></tr>";
+            echo "<tr>";          
+            echo "<td>" . $point['question'] . "</td>";
+            echo "<td>" . $point['answer'] . "</td>";
+            echo "<td>" . $point['answerDate'] . "</td>";
+            echo "</tr>";
+            echo "</table>";
+        }
+        } else
+        { // If there are no highscores to display in the leaderboard
+            echo "No highscores yet! Be the first one by playing a match.";
+        }
+    }
 
     function getScore()
     {
